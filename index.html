@@ -310,7 +310,7 @@ a:hover{color:var(--red-dark);}
 
       <form id="form" class="form" novalidate>
         <div class="campo">
-          <label for="nombre">Nombre</label>
+          <label for="nombre">Nombre completo</label>
           <input type="text" id="nombre" name="nombre" autocomplete="name" required>
           <div class="campo__nota" id="notaNombre"></div>
         </div>
@@ -318,7 +318,7 @@ a:hover{color:var(--red-dark);}
         <div class="campo">
           <label for="monto">Monto del aporte</label>
           <input type="number" id="monto" name="monto" min="1000" step="1000" inputmode="numeric" required>
-          <div class="campo__nota" id="notaMonto">Monto mínimo: $1.000</div>
+          <div class="campo__nota" id="notaMonto">Monto mínimo: $1.000 &middot; El descuento se realiza por planilla</div>
         </div>
 
         <div class="campo campo--ancho">
@@ -340,6 +340,7 @@ a:hover{color:var(--red-dark);}
       <div class="legal">
         <div class="kicker legal__kicker">Información legal</div>
         <p>Los aportes son voluntarios y de carácter solidario. No constituyen una donación con beneficio tributario ni generan derecho a devolución.</p>
+        <p>El monto comprometido se descuenta por planilla de la remuneración correspondiente al mes del aporte.</p>
         <p>Los datos entregados se utilizan únicamente para registrar el aporte y no se comparten con terceros.</p>
         <p>La totalidad de lo recaudado se destina exclusivamente al fin señalado en esta colecta.</p>
       </div>
@@ -399,7 +400,7 @@ const notaMonto = el("notaMonto");
 const notaEnvio = el("notaEnvio");
 const boton = form.querySelector('button[type="submit"]');
 
-const NOTA_MONTO_BASE = "Monto mínimo: $1.000";
+const NOTA_MONTO_BASE = "Monto mínimo: $1.000 · El descuento se realiza por planilla";
 
 function limpiarNotas() {
   notaNombre.textContent = "";

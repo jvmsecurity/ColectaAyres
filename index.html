@@ -327,9 +327,15 @@ a:hover{color:var(--red-dark);}
         </div>
 
         <div class="campo">
+          <label for="rut">RUT</label>
+          <input type="text" id="rut" name="rut" inputmode="text" placeholder="17.266.078-9" required>
+          <div class="campo__nota" id="notaRut">Formato: 16.666.666-6</div>
+        </div>
+
+        <div class="campo">
           <label for="monto">Monto del aporte</label>
           <input type="number" id="monto" name="monto" min="1000" step="1000" inputmode="numeric" required>
-          <div class="campo__nota" id="notaMonto">Monto mínimo: $1.000 &middot; El descuento se realiza por planilla</div>
+          <div class="campo__nota" id="notaMonto" style="font-size:20px;">Monto mínimo: $1.000 &middot; El descuento se realiza por planilla</div>
         </div>
 
         <div class="campo campo--ancho">
@@ -391,7 +397,7 @@ const COLECTA = {
 */
 
 /* ====== CONFIGURACIÓN ====== */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzKJT3ch1HQqM9Syt8kjqlbXz3Y179fM68ew1umckec5nz1N_IgcNUgn3SDzgShYF7iZA/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzTphEsETfjI1P7vwkBWj14T2ogLzOuwAjLDPALxouHA7pwQdqvTZ9xz6WyqqinWCMFIA/exec";
 /* =========================== */
 
 const el = id => document.getElementById(id);
@@ -407,24 +413,35 @@ function render(d) {
 const form = el("form");
 const gracias = el("gracias");
 const notaNombre = el("notaNombre");
+const notaRut = el("notaRut");
 const notaMonto = el("notaMonto");
 const notaEnvio = el("notaEnvio");
 const boton = form.querySelector('button[type="submit"]');
 
 const NOTA_MONTO_BASE = "Monto mínimo: $1.000 · El descuento se realiza por planilla";
+const NOTA_RUT_BASE = "Formato: 16.666.666-6";
+const RUT_RE = /^\d{1,2}\.\d{3}\.\d{3}-[\dkK]$/;
 
 function limpiarNotas() {
   notaNombre.textContent = "";
+  notaRut.textContent = NOTA_RUT_BASE;
   notaMonto.textContent = NOTA_MONTO_BASE;
   notaEnvio.textContent = "";
 }
 
-function validar(nombre, montoRaw) {
+function validar(nombre, rut, montoRaw) {
   limpiarNotas();
   let ok = true;
 
   if (!nombre) {
     notaNombre.textContent = "Ingresa tu nombre.";
+    ok = false;
+  }
+  if (!rut) {
+    notaRut.textContent = "Ingresa tu RUT.";
+    ok = false;
+  } else if (!RUT_RE.test(rut)) {
+    notaRut.textContent = "El RUT debe tener el formato 17.266.078-9.";
     ok = false;
   }
   if (montoRaw === "") {
@@ -479,12 +496,13 @@ form.addEventListener("submit", async e => {
   e.preventDefault();
 
   const nombre = el("nombre").value.trim();
+  const rut = el("rut").value.trim();
   const montoRaw = el("monto").value.trim();
   const mensaje = el("mensaje").value.trim();
 
-  if (!validar(nombre, montoRaw)) return;
+  if (!validar(nombre, rut, montoRaw)) return;
 
-  const datos = { nombre: nombre, monto: montoRaw, mensaje: mensaje };
+  const datos = { nombre: nombre, rut: rut, monto: montoRaw, mensaje: mensaje };
 
   boton.disabled = true;
   boton.textContent = "Enviando…";
